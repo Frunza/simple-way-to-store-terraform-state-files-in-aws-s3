@@ -1,0 +1,23 @@
+services:
+  update:
+    image: test-aws-terraform-state
+    network_mode: host
+    working_dir: /app
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY}
+    entrypoint: ["sh", "-c"]
+    command: [
+      "terraform init && terraform apply -auto-approve"
+    ]
+  destroy:
+    image: test-aws-terraform-state
+    network_mode: host
+    working_dir: /app
+    environment:
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY}
+    entrypoint: ["sh", "-c"]
+    command: [
+      "terraform init && terraform destroy -auto-approve"
+    ]
