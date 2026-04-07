@@ -8,11 +8,10 @@ I want a simple way to store my `Terraform state` files in `AWS s3`. The solutio
 
 A Linux or MacOS machine for local development. If you are running Windows, you first need to set up the *Windows Subsystem for Linux (WSL)* environment.
 
-You need `docker cli` and `docker-compose` on your machine for testing purposes, and/or on the machines that run your pipeline.
-You can check both of these by running the following commands:
+You need `docker cli` on your machine for testing purposes, and/or on the machines that run your pipeline.
+You can verify this by running the following command:
 ```sh
 docker --version
-docker-compose --version
 ```
 
 For `AWS` access you need the following:
@@ -52,12 +51,12 @@ We will use `docker` containers to run the `Terraform` code. Let's start with th
 ```sh
 FROM hashicorp/terraform:1.5.0
 
-ADD ./terraform /app
+COPY ./terraform /app
 WORKDIR /app
 ```
 We start from an image that has `Terraform` already preinstalled and afterwards we just copy our code inside.
 
-Now we can crate a *docker-compose* file to run it:
+Now we can crate a *docker compose* file to run it:
 ```sh
 services:
   update:
@@ -108,7 +107,7 @@ Now we can create a script to create/update the `Terraform` infrastructure:
 set -e
 
 docker build -t test-aws-terraform-state -f docker/dockerfile .
-docker-compose -f docker/docker-compose.yml run --rm update
+docker compose -f docker/docker-compose.yml run --rm update
 ```
 , and another one to destroy it:
 ```sh
@@ -118,5 +117,5 @@ docker-compose -f docker/docker-compose.yml run --rm update
 set -e
 
 docker build -t test-aws-terraform-state -f docker/dockerfile .
-docker-compose -f docker/docker-compose.yml run --rm destroy
+docker compose -f docker/docker-compose.yml run --rm destroy
 ```
